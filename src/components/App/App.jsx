@@ -6,13 +6,10 @@ import { Feedback } from "../Feedback/Feedback.jsx";
 import css from "./App.module.css";
 import { Notification } from "../Notification/Notification.jsx";
 
-
-
-
 export default function App() {
-const savedClick = window.localStorage.getItem("clicks")
-const getClicks = () => {
-    return savedClick !== null ? JSON.parse(savedClick) : {good: 0, neutral: 0, bad: 0}
+  const getClicks = () => {
+  const savedClick = window.localStorage.getItem("clicks")
+  return savedClick !== null ? JSON.parse(savedClick) : {good: 0, neutral: 0, bad: 0}
   }
 
   const [clicks, setClicks] = useState(getClicks );
@@ -34,8 +31,6 @@ const getClicks = () => {
   useEffect(() => {
   window.localStorage.setItem("clicks", JSON.stringify(clicks) )
   }, [clicks])
-
-
    
    return (
     <>
