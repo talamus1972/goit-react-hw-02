@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Description } from "../Description/Description.jsx";
 import { Options } from "../Options/Options.jsx";
@@ -7,8 +7,15 @@ import css from "./App.module.css";
 import { Notification } from "../Notification/Notification.jsx";
 
 
+
+
 export default function App() {
-  const [clicks, setClicks] = useState({ good: 0, neutral: 0, bad: 0 });
+const savedClick = window.localStorage.getItem("clicks")
+const getClicks = () => {
+    return savedClick !== null ? JSON.parse(savedClick) : {good: 0, neutral: 0, bad: 0}
+  }
+
+  const [clicks, setClicks] = useState(getClicks );
 
    const updateFeedback = (feedbackType) => {
     if (feedbackType === "reset") {
@@ -24,7 +31,13 @@ export default function App() {
   const totalFeedback = clicks.good + clicks.neutral + clicks.bad;
   const positive=Math.round(((clicks.good + clicks.neutral) / totalFeedback) * 100)
   
-  return (
+  useEffect(() => {
+  window.localStorage.setItem("clicks", JSON.stringify(clicks) )
+  }, [clicks])
+
+
+   
+   return (
     <>
       <Description />
       <div className={css.container}>
@@ -35,7 +48,7 @@ export default function App() {
           Neutral
         </Options>
         <Options onTrack={() => updateFeedback("bad")}>
-          Bad
+          Bad 
         </Options>
          {totalFeedback > 0 && (
           <Options  onTrack={() => updateFeedback("reset")}>
@@ -45,8 +58,10 @@ export default function App() {
       </div>
   {totalFeedback > 0 ? (
         <>
-          <Feedback feedbackCounts={clicks} />
-          <p className={css.positive}>Positive:{positive}% </p>
+           <Feedback feedbackCounts={clicks} />
+           
+          <p className={css.total}>Total: {totalFeedback} </p>
+          <p className={css.positive}>Positive: {positive}% </p>
         </>
       ) : (
         <Notification />

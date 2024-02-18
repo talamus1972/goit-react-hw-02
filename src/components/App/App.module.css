@@ -3,6 +3,7 @@
 
 }
 
-.positive {
+.positive,
+.total {
     padding-left: 30px;
 }
